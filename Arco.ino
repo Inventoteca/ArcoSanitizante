@@ -28,9 +28,9 @@ int distMax=120; //se puede obtener de la lectura del sensor en puerto serial
 int porcentMin=10; //A partir de cuánta agua se desactiva el aspersor
 
 int pinSensorIR=8; //En qué pin se conecta el sensor IR
-int lecturaIR = 0;
-
 int pinRele=5; //Para activar la bomba de agua
+
+int lecturaIR = 0; //Inicializar variable.
 
 void setup()  
 {
@@ -41,10 +41,10 @@ void setup()
   pinMode(pinSensorIR, INPUT_PULLUP);
 
   
-  pinMode(10, OUTPUT); //Borrar estos dos después de la prueba
-  digitalWrite(10, LOW);
+  //pinMode(10, OUTPUT); //Comentar estos dos después de la prueba
+  //digitalWrite(10, LOW);
   
-  lcd.begin (20,4);  // Inicializar lcd *CAMBIAR 20x4
+  lcd.begin (20,4);  // Inicializar lcd 
   lcd.setBacklight(LED_ON);
   lcd.backlight();
   
@@ -56,10 +56,8 @@ void setup()
   
   lcd.clear(); 
   lcd.setBacklight(LED_OFF);
-  Serial.println("Luz apagada");
   delay(300); 
-  lcd.backlight(); 
-  Serial.println("Luz encendida");
+  lcd.backlight();
   
   lcd.setCursor(0,0);
   lcd.print("     DD BIOTECH     "); 
@@ -71,12 +69,13 @@ void loop()
   int x = PorcentajeDeposito();  
   ShowNivelTanque(x);
   if(x<porcentMin) ShowAdvertencia();
-  else{
+  else
+  {
     ShowReady();
     lecturaIR = digitalRead(pinSensorIR);
-    if(!lecturaIR) {
-      Serial.println("Persona pasando");
-      AspersorON();
+    if(!lecturaIR) 
+    {
+      AspersorON(); //Activa aspersores por 20s
       delay(5000);
     }
   }
@@ -104,14 +103,14 @@ float PorcentajeDeposito(void){
 }
 void ShowNivelTanque(int niv){ //*CAMBIAR 20x4
   
-  //lcd.setCursor(0,1); //20*4
-  lcd.setCursor(0,0); //16*2
+  lcd.setCursor(0,1); //20*4
+  //lcd.setCursor(0,0); //16*2
   lcd.print("   TANQUE AL "); 
   lcd.print(niv); 
   lcd.print("%   ");
   
-  //lcd.setCursor(0,2); //20*4
-  lcd.setCursor(0,1); //16*2
+  lcd.setCursor(0,2); //20*4
+  //lcd.setCursor(0,1); //16*2
   if(niv>80 && niv<100)     lcd.print("      [|||||}   ");
   else if(niv>60 && niv<80) lcd.print("      [|||| }   ");
   else if(niv>40 && niv<60) lcd.print("      [|||  }   ");
@@ -122,8 +121,8 @@ void ShowNivelTanque(int niv){ //*CAMBIAR 20x4
 }
 void ShowAdvertencia(void){
   
-  //lcd.setCursor(0,3); //20*4
-  lcd.setCursor(0,1); //16*2
+  lcd.setCursor(0,3); //20*4
+  //lcd.setCursor(0,1); //16*2
   lcd.print("   DEPOSITO VACIO   "); 
   lcd.setBacklight(LED_OFF);
   delay(300); 
@@ -133,8 +132,8 @@ void ShowAdvertencia(void){
 
 void ShowReady(void){
   
-  //lcd.setCursor(0,3); //20*4
-  lcd.setCursor(0,1); //16*2
+  lcd.setCursor(0,3); //20*4
+  //lcd.setCursor(0,1); //16*2
   lcd.print("     ADELANTE!      "); 
   
 }
@@ -142,11 +141,11 @@ void ShowReady(void){
 void AspersorON(void){
 
   digitalWrite(pinRele,HIGH);
-  //lcd.setCursor(0,3); //20*4
-  lcd.setCursor(0,1); //16*2
-  lcd.print("   DESINFECTANDO   ");
+  lcd.setCursor(0,3); //20*4
+  //lcd.setCursor(0,1); //16*2
+  lcd.print("   DESINFECTANDO.   ");
   delay(20000);
-  Serial.println("Desinfectado!");
+  lcd.print("       LISTO.       ");
   digitalWrite(pinRele,LOW);
   
 }
